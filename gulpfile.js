@@ -4,12 +4,25 @@ const imagemin = require("gulp-imagemin");
 const uglify = require("gulp-uglify-es").default;
 const concat = require("gulp-concat");
 const pug = require('gulp-pug');
+const webserver = require('gulp-webserver');
 
 const paths = {
   sass: ['./src/css/**/*.sass'],
   pug: ['./src/**/*.pug'],
   js: ['./src/js/**/*.js']
 }
+
+
+ 
+gulp.task('webserver', () => {
+  gulp.src('dist')
+    .pipe(webserver({
+      livereload: true,
+      // directoryListing: true,
+      open: true,
+      port: 8001
+    }));
+});
 
 gulp.task('templates', () => {
   return gulp.src('./src/**/!(_)*.pug')
@@ -45,5 +58,5 @@ gulp.task('watch', () => {
 
 gulp.task(
   "default",
-  gulp.series(gulp.parallel('sass', 'templates', 'scripts', 'watch'))
+  gulp.series(gulp.parallel('sass', 'templates', 'scripts', 'webserver', 'watch'))
 );
