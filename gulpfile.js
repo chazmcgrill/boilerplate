@@ -5,6 +5,7 @@ const uglify = require("gulp-uglify-es").default;
 const concat = require("gulp-concat");
 const pug = require('gulp-pug');
 const webserver = require('gulp-webserver');
+const babel = require('gulp-babel');
 
 const paths = {
   sass: ['./src/css/**/*.sass'],
@@ -38,6 +39,7 @@ gulp.task('sass', () => {
 
 gulp.task('scripts', () => {
   return gulp.src('src/js/*.js')
+    .pipe(babel({presets: ['env']}))
     .pipe(uglify())
     .pipe(concat('app.js'))
     .pipe(gulp.dest('dist'));
