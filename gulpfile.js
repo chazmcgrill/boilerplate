@@ -5,12 +5,19 @@ const uglify = require("gulp-uglify-es").default;
 const concat = require("gulp-concat");
 const pug = require('gulp-pug');
 const babel = require('gulp-babel');
+const browserSync = require('browser-sync').create();
 
 const paths = {
   sass: ['./src/css/**/*.sass'],
   pug: ['./src/**/*.pug'],
   js: ['./src/js/**/*.js']
 }
+
+gulp.task('browser-sync', () => {
+  return browserSync.init({
+    server: { baseDir: "./dist/" }
+  });
+});
 
 gulp.task('templates', () => {
   return gulp.src('./src/**/!(_)*.pug')
@@ -47,5 +54,5 @@ gulp.task('watch', () => {
 
 gulp.task(
   "default",
-  gulp.series(gulp.parallel('sass', 'templates', 'scripts', 'watch'))
+  gulp.series(gulp.parallel('sass', 'browser-sync', 'templates', 'scripts', 'watch'))
 );
