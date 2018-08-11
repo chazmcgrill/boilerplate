@@ -3,6 +3,10 @@ const uglify = require("gulp-uglify-es").default;
 const browserSync = require('browser-sync').create();
 const plugs = require('gulp-load-plugins')();
 
+const DEV_DIR = './dist/';
+
+// -- FILE PATHS
+
 const paths = {
   sass: {
     src: 'src/css/**/*.sass',
@@ -23,11 +27,28 @@ const paths = {
   }  
 }
 
+
+// -- MAIN TASKS
+
+gulp.task('watch', () => {
+  gulp.watch(paths.pug.watch, gulp.series("templates"));
+  gulp.watch(paths.js.src, gulp.series("scripts"));
+  gulp.watch(paths.img.src, gulp.series("imageMin"));
+  gulp.watch(paths.sass.src, gulp.series("sass"));
+});
+
 gulp.task('browser-sync', () => {
   return browserSync.init({
-    server: { baseDir: "./dist/" }
+    server: { baseDir: DEV_DIR }
   });
 });
+
+const build = gulp.series('sass', 'templates', 'scripts');
+
+gulp.task('default', gulp.parallel(build, gulp.series(gulp.parallel('browser-sync', 'watch'))));
+
+
+// -- FILE TASKS
 
 gulp.task('templates', () => {
   return gulp.src(paths.pug.src)
@@ -43,7 +64,7 @@ gulp.task('sass', () => {
 
 gulp.task('scripts', () => {
   return gulp.src(paths.js.src)
-    .pipe(plugs.babel({presets: ['env']}))
+    .pipe(plugs.babel({ presets: ['env'] }))
     .pipe(uglify())
     .pipe(plugs.concat('app.js'))
     .pipe(gulp.dest(paths.js.dist));
@@ -54,15 +75,3 @@ gulp.task('imageMin', () => {
     .pipe(plugs.imagemin([plugs.imagemin.jpegtran({ progressive: true })]))
     .pipe(gulp.dest(paths.img.dist))
 });
-
-gulp.task('watch', () => {
-  gulp.watch(paths.pug.watch, gulp.series("templates"));
-  gulp.watch(paths.js.src, gulp.series("scripts"));
-  gulp.watch(paths.img.src, gulp.series("imageMin"));
-  gulp.watch(paths.sass.src, gulp.series("sass"));
-});
-
-gulp.task(
-  "default",
-  gulp.series(gulp.parallel('sass', 'browser-sync', 'templates', 'scripts', 'watch'))
-);
