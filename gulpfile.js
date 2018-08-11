@@ -1,11 +1,7 @@
 const gulp = require("gulp");
-const sass = require("gulp-sass");
-const imagemin = require("gulp-imagemin");
 const uglify = require("gulp-uglify-es").default;
-const concat = require("gulp-concat");
-const pug = require('gulp-pug');
-const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
+const plugs = require('gulp-load-plugins')();
 
 const paths = {
   sass: ['./src/css/**/*.sass'],
@@ -21,27 +17,27 @@ gulp.task('browser-sync', () => {
 
 gulp.task('templates', () => {
   return gulp.src('./src/**/!(_)*.pug')
-    .pipe(pug({ pretty: true }))
+    .pipe(plugs.pug({ pretty: true }))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('sass', () => {
   return gulp.src('./src/css/*.sass')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(plugs.sass().on('error', plugs.sass.logError))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('scripts', () => {
   return gulp.src('src/js/*.js')
-    .pipe(babel({presets: ['env']}))
+    .pipe(plugs.babel({presets: ['env']}))
     .pipe(uglify())
-    .pipe(concat('app.js'))
+    .pipe(plugs.concat('app.js'))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('imageMin', () => {
   gulp.src('src/img/*')
-    .pipe(imagemin([imagemin.jpegtran({ progressive: true })]))
+    .pipe(plugs.imagemin([plugs.imagemin.jpegtran({ progressive: true })]))
     .pipe(gulp.dest('dist/img'))
 });
 
