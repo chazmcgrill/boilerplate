@@ -4,9 +4,23 @@ const browserSync = require('browser-sync').create();
 const plugs = require('gulp-load-plugins')();
 
 const paths = {
-  sass: ['./src/css/**/*.sass'],
-  pug: ['./src/**/*.pug'],
-  js: ['./src/js/**/*.js']
+  sass: {
+    src: 'src/css/**/*.sass',
+    dist: 'dist/assets/css'
+  },
+  pug: {
+    src: './src/**/!(_)*.pug',
+    watch: './src/**/*.pug',
+    dist: 'dist'
+  },
+  js: {
+    src: 'src/js/**/*.js',
+    dist: 'dist/assets/js'
+  },
+  img: {
+    src: 'src/img/*',
+    dist: 'dist/assets/img'
+  }  
 }
 
 gulp.task('browser-sync', () => {
@@ -16,36 +30,36 @@ gulp.task('browser-sync', () => {
 });
 
 gulp.task('templates', () => {
-  return gulp.src('./src/**/!(_)*.pug')
+  return gulp.src(paths.pug.src)
     .pipe(plugs.pug({ pretty: true }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(paths.pug.dist));
 });
 
 gulp.task('sass', () => {
-  return gulp.src('./src/css/*.sass')
+  return gulp.src(paths.sass.src)
     .pipe(plugs.sass().on('error', plugs.sass.logError))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(paths.sass.dist));
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('src/js/*.js')
+  return gulp.src(paths.js.src)
     .pipe(plugs.babel({presets: ['env']}))
     .pipe(uglify())
     .pipe(plugs.concat('app.js'))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(paths.js.dist));
 });
 
 gulp.task('imageMin', () => {
-  gulp.src('src/img/*')
+  gulp.src(paths.img.src)
     .pipe(plugs.imagemin([plugs.imagemin.jpegtran({ progressive: true })]))
-    .pipe(gulp.dest('dist/img'))
+    .pipe(gulp.dest(paths.img.dist))
 });
 
 gulp.task('watch', () => {
-  gulp.watch(paths.pug, gulp.series("templates"));
-  gulp.watch("src/js/**/*.js", gulp.series("scripts"));
-  gulp.watch("src/img/*", gulp.series("imageMin"));
-  gulp.watch(paths.sass, gulp.series("sass"));
+  gulp.watch(paths.pug.watch, gulp.series("templates"));
+  gulp.watch(paths.js.src, gulp.series("scripts"));
+  gulp.watch(paths.img.src, gulp.series("imageMin"));
+  gulp.watch(paths.sass.src, gulp.series("sass"));
 });
 
 gulp.task(
