@@ -28,26 +28,6 @@ const paths = {
 }
 
 
-// -- MAIN TASKS
-
-gulp.task('watch', () => {
-  gulp.watch(paths.pug.watch, gulp.series("templates"));
-  gulp.watch(paths.js.src, gulp.series("scripts"));
-  gulp.watch(paths.img.src, gulp.series("imageMin"));
-  gulp.watch(paths.sass.src, gulp.series("sass"));
-});
-
-gulp.task('browser-sync', () => {
-  return browserSync.init({
-    server: { baseDir: DEV_DIR }
-  });
-});
-
-const build = gulp.series('sass', 'templates', 'scripts');
-
-gulp.task('default', gulp.parallel(build, gulp.series(gulp.parallel('browser-sync', 'watch'))));
-
-
 // -- FILE TASKS
 
 gulp.task('templates', () => {
@@ -71,7 +51,29 @@ gulp.task('scripts', () => {
 });
 
 gulp.task('imageMin', () => {
-  gulp.src(paths.img.src)
+  return gulp.src(paths.img.src)
     .pipe(plugs.imagemin([plugs.imagemin.jpegtran({ progressive: true })]))
     .pipe(gulp.dest(paths.img.dist))
 });
+
+
+// -- MAIN TASKS
+
+gulp.task('watch', () => {
+  gulp.watch(paths.pug.watch, gulp.series("templates"));
+  gulp.watch(paths.js.src, gulp.series("scripts"));
+  gulp.watch(paths.img.src, gulp.series("imageMin"));
+  gulp.watch(paths.sass.src, gulp.series("sass"));
+});
+
+gulp.task('browser-sync', () => {
+  return browserSync.init({
+    server: { baseDir: DEV_DIR }
+  });
+});
+
+const build = gulp.series('sass', 'templates', 'scripts', 'imageMin');
+
+gulp.task('default', gulp.parallel(build, gulp.series(gulp.parallel('browser-sync', 'watch'))));
+gulp.task('prod', gulp.parallel(build));
+
