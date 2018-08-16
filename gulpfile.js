@@ -24,7 +24,7 @@ const paths = {
   img: {
     src: 'src/img/*',
     dist: 'dist/assets/img'
-  }  
+  }
 }
 
 
@@ -59,21 +59,18 @@ gulp.task('imageMin', () => {
 
 // -- MAIN TASKS
 
-gulp.task('watch', () => {
-  gulp.watch(paths.pug.watch, gulp.series("templates"));
-  gulp.watch(paths.js.src, gulp.series("scripts"));
-  gulp.watch(paths.img.src, gulp.series("imageMin"));
-  gulp.watch(paths.sass.src, gulp.series("sass"));
-});
-
 gulp.task('browser-sync', () => {
-  return browserSync.init({
+  browserSync.init({
     server: { baseDir: DEV_DIR }
   });
+
+  gulp.watch(paths.pug.watch, gulp.series("templates")).on('change', browserSync.reload);
+  gulp.watch(paths.js.src, gulp.series("scripts")).on('change', browserSync.reload);
+  gulp.watch(paths.img.src, gulp.series("imageMin")).on('change', browserSync.reload);
+  gulp.watch(paths.sass.src, gulp.series("sass")).on('change', browserSync.reload);
 });
 
-const build = gulp.series('sass', 'templates', 'scripts', 'imageMin');
+const build = gulp.series('sass', 'templates', 'scripts', 'imageMin', 'browser-sync');
 
-gulp.task('default', gulp.parallel(build, gulp.series(gulp.parallel('browser-sync', 'watch'))));
-gulp.task('prod', gulp.parallel(build));
-
+gulp.task('default', build);
+gulp.task('prod', build);
