@@ -1,7 +1,7 @@
 {
-  "name": "gulp-starter",
+  "name": "boilerplate",
   "version": "1.0.0",
-  "description": "gulp setup template",
+  "description": "gulp boilerplate",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

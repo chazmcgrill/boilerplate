@@ -1,5 +1,5 @@
-# Gulp Starter
-Gulp boilerplate for new projects. 
+# Boilerplate
+Boilerplate for new projects uses gulp as a task runner. 
 It compiles pug, sass and js also minifies images.
 
 ## to setup
