@@ -1,4 +1,14 @@
-@import './reset'
-@import './variables'
-@import './globals'
-@import './sections/header'
+// holds vendor code, helpers, mixins, variables, and general selector styles (body, h1, p, a, etc.)
+@import 'base/base'
+
+// holds macro layout styles
+@import 'layout/layout'
+
+// holds micro layouts styles
+@import 'module/module'
+
+// holds state specific code, how buttons look on hover and similar
+@import 'state/state'
+
+// any hacky css to be later improved
+@import 'shame/shame'

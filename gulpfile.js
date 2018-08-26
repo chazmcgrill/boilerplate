@@ -38,7 +38,9 @@ gulp.task('templates', () => {
 
 gulp.task('sass', () => {
   return gulp.src(paths.sass.src)
-    .pipe(plugs.sass().on('error', plugs.sass.logError))
+    .pipe(plugs.sass({ 
+      outputStyle: 'compressed' 
+    }).on('error', plugs.sass.logError))
     .pipe(gulp.dest(paths.sass.dist));
 });
 
