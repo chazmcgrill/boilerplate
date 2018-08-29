@@ -1,0 +1,25 @@
+.row
+  display: flex
+  flex-direction: row
+
+  &--center
+    justify-content: center
+  
+  &--spaced
+    justify-content: space-around
+
+.col-1
+  width: 300px
+  padding: 0 10px
+
+.col-2
+  width: 640px
+
+@media (max-width: 640px)
+  .row
+    display: block
+
+  .col-1, .col-2
+    width: 100%
+  .col-2    
+    margin: 0 10px
