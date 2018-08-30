@@ -1,6 +1,8 @@
 .row
+  box-sizing: border-box
   display: flex
   flex-direction: row
+  margin: 0 10px
 
   &--center
     justify-content: center
@@ -8,18 +10,20 @@
   &--spaced
     justify-content: space-around
 
-.col-1
-  width: 300px
-  padding: 0 10px
+.col
+  width: 400px
 
-.col-2
-  width: 640px
+  &--wide
+    width: 800px
+
+  &--half
+    width: 50%
+
 
 @media (max-width: 640px)
   .row
     display: block
-
-  .col-1, .col-2
-    width: 100%
-  .col-2    
     margin: 0 10px
+
+  .col
+    width: 100%
